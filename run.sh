@@ -1,0 +1,1 @@
+python exec.py -inst test4 -alg LS2 -time 600 -seed 10 -plot table

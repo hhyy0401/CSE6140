@@ -1,0 +1,1 @@
+python plots.py -inst test4 -time 600
