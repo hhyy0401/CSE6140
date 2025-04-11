@@ -133,23 +133,5 @@ The script will search for .trace files in the result/ folder that match the pat
 
 
 
-\begin{table}[h]
-\centering
-\begin{tabular}{lccc}
-\hline
-\textbf{Algorithm} & \textbf{Time (s)} & \textbf{Collection Size} & \textbf{Rel. Error} \\
-\hline
-BnB    & 13.42 & 158.0 & 0.000 \\
-Approx & 0.05  & 167.4 & 0.059 \\
-LS1    & 2.14  & 160.2 & 0.014 \\
-LS2    & 1.73  & 162.8 & 0.032 \\
-\hline
-\end{tabular}
-\caption{Average performance of algorithms on instance \texttt{test4}.}
-\label{tab:results_test4}
-\end{table}
-
-
-
 
 
