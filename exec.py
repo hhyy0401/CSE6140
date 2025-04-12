@@ -47,7 +47,7 @@ def main():
         pass
     elif args.alg == 'LS2':
         result, intermediate_results = hill_climbing_min_set_cover(universe, subsets, args.time)
-        solution_filename = f"{args.inst}_{args.alg}_{args.time}"
+        solution_filename = f"{args.inst}_{args.alg}_{args.time}_{args.seed}"
     else:
         print(f"Algorithm '{args.alg}' is not implemented in this file.")
 
