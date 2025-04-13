@@ -3,8 +3,12 @@ import random
 import time
 
 from LS2 import hill_climbing_min_set_cover
+from Approx import greedy_set_cover
 
 def load_dataset(filename):
+    if '.' in filename:
+        filename = filename.split('.')[0]
+        
     with open("data/"+filename+".in", 'r') as f:
         lines = f.readlines()
     n, _ = list(map(int, lines[0].strip().split(" ")))
@@ -40,7 +44,9 @@ def main():
         solution_filename = f"{args.inst}_{args.alg}_{args.time}"
         pass
     elif args.alg == 'Approx':
-        solution_filename = f"{args.inst}_{args.alg}_{args.time}_{args.seed}"
+        result, timeSpent = greedy_set_cover(universe, subsets)
+        intermediate_results = [(timeSpent, len(result))] # To prevent code errors (Approx doesn't require trace file)
+        solution_filename = f"{args.inst}_{args.alg}_{args.time}"
         pass
     elif args.alg == 'LS1':
         solution_filename = f"{args.inst}_{args.alg}_{args.time}_{args.seed}"

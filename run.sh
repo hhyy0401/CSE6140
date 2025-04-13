@@ -3,7 +3,9 @@
 
 TIME_LIMIT=600
 
-ALG="LS2"
+ALG="Approx"
+
+cd "$(dirname "$0")"
 
 # small1 ~ small18
 for i in $(seq 1 18); do
