@@ -1,9 +1,9 @@
 #!/bin/bash
 
 
-TIME_LIMIT=600
+TIME_LIMIT=30
 
-ALG="Approx"
+ALG="LS1"
 
 cd "$(dirname "$0")"
 
