@@ -49,17 +49,14 @@ def hill_climbing_min_set_cover(universe, subsets, cutoff_time):
             count_table[e-1] += 1
 
     history = [(round(time.time() - start_time, 2), len(current_cover))]
-    # cover_idx = random.choice(current_cover)
+    cover_idx = random.choice(current_cover)
     #cover_idx = min(current_cover, key=lambda idx: len(subsets[idx]))
    
     tabu_set = set()  
+    check = 0
+    length = len(current_cover)
 
     while time.time() - start_time < cutoff_time:
-
-        cover_idx = random.choice(current_cover)
-        if cover_idx in tabu_set:
-            continue
-
         cover_set = subsets[cover_idx]
         neighbor_indices = set()
         for e in cover_set:
@@ -71,6 +68,8 @@ def hill_climbing_min_set_cover(universe, subsets, cutoff_time):
         improved = False
 
         for new_idx in sorted_neighbors:
+            if cover_idx in tabu_set:
+                continue  
 
             temp_count = count_table.copy()
 
@@ -87,6 +86,8 @@ def hill_climbing_min_set_cover(universe, subsets, cutoff_time):
 
                 tabu_set.add(cover_idx)
                 tabu_set.add(new_idx)
+
+                cover_idx = new_idx
 
                 to_remove = []
                 reduced = False
@@ -108,5 +109,9 @@ def hill_climbing_min_set_cover(universe, subsets, cutoff_time):
                     break
 
         if not improved:
-            continue
+            check += 1
+            tabu_set = set()  
+            cover_idx = random.choice(current_cover)
+        if check == min(length, 100):
+            break
     return sorted(current_cover), history
