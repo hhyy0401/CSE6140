@@ -2,6 +2,7 @@ import argparse
 import random
 import time
 
+from LS1 import simulated_annealing
 from LS2 import hill_climbing_min_set_cover
 from Approx import greedy_set_cover
 
@@ -49,8 +50,8 @@ def main():
         solution_filename = f"{args.inst}_{args.alg}_{args.time}"
         pass
     elif args.alg == 'LS1':
+        result, intermediate_results = simulated_annealing(universe, subsets, args.time, args.seed)
         solution_filename = f"{args.inst}_{args.alg}_{args.time}_{args.seed}"
-        pass
     elif args.alg == 'LS2':
         result, intermediate_results = hill_climbing_min_set_cover(universe, subsets, args.time)
         solution_filename = f"{args.inst}_{args.alg}_{args.time}_{args.seed}"
