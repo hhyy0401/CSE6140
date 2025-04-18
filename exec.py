@@ -5,6 +5,7 @@ import time
 from LS1 import simulated_annealing
 from LS2 import hill_climbing_min_set_cover
 from Approx import greedy_set_cover
+from BnB import branch_and_bound_min_set_cover
 
 def load_dataset(filename):
     if '.' in filename:
@@ -42,6 +43,7 @@ def main():
     universe, subsets = load_dataset(args.inst) 
 
     if args.alg == 'BnB':
+        result, intermediate_results = branch_and_bound_min_set_cover(universe, subsets, args.time)
         solution_filename = f"{args.inst}_{args.alg}_{args.time}"
         pass
     elif args.alg == 'Approx':
