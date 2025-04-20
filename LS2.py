@@ -39,10 +39,11 @@ def hill_climbing_min_set_cover(universe, subsets, cutoff_time):
         for e in s:
             element_to_subsets[e].append(idx)
 
+    #cover initialization 
     #current_cover = greedy_cover(universe, subsets)
     current_cover = random_cover(universe, subsets)
 
-    # Build count table
+    # Build count table for checking coverage fast
     count_table = np.zeros(n, dtype=int)
     for idx in current_cover:
         for e in subsets[idx]:
@@ -56,6 +57,7 @@ def hill_climbing_min_set_cover(universe, subsets, cutoff_time):
     check = 0
     length = len(current_cover)
 
+    # time limit
     while time.time() - start_time < cutoff_time:
         cover_set = subsets[cover_idx]
         neighbor_indices = set()
@@ -64,11 +66,12 @@ def hill_climbing_min_set_cover(universe, subsets, cutoff_time):
         neighbor_indices -= set(current_cover)
         neighbor_indices.discard(cover_idx)
 
+        # search neighbor in increasing order of size
         sorted_neighbors = sorted(neighbor_indices, key=lambda i: len(subsets[i]), reverse=True)
         improved = False
 
         for new_idx in sorted_neighbors:
-            if cover_idx in tabu_set:
+            if cover_idx in tabu_set: # prevent backtracking
                 continue  
 
             temp_count = count_table.copy()
@@ -78,6 +81,7 @@ def hill_climbing_min_set_cover(universe, subsets, cutoff_time):
             for e in subsets[new_idx]:
                 temp_count[e - 1] += 1
 
+            # check coverage
             if np.all(temp_count > 0):
                 current_cover.remove(cover_idx)
                 current_cover.append(new_idx)
@@ -89,6 +93,7 @@ def hill_climbing_min_set_cover(universe, subsets, cutoff_time):
 
                 cover_idx = new_idx
 
+                # remove unnecessary subsets from the cover
                 to_remove = []
                 reduced = False
                 for idx in current_cover:
@@ -103,6 +108,7 @@ def hill_climbing_min_set_cover(universe, subsets, cutoff_time):
                 for idx in to_remove:
                     current_cover.remove(idx)
 
+                # check if the new cover is better than the previous one
                 if reduced:
                     elapsed = round(time.time() - start_time, 2)
                     history.append((elapsed, len(current_cover)))
@@ -112,6 +118,8 @@ def hill_climbing_min_set_cover(universe, subsets, cutoff_time):
             check += 1
             tabu_set = set()  
             cover_idx = random.choice(current_cover)
+
+        # early stopping code
         if check == min(length, 100):
             break
     return sorted(current_cover), history
