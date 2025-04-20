@@ -17,19 +17,14 @@ import numpy as np
 from scipy.optimize import linprog
 from Approx import greedy_set_cover
 
-# -----------------------------------------------------------------------------
 # Globals for incumbent & tracing
-# -----------------------------------------------------------------------------
 best_solution = None  # list of 0-based subset indices
 best_solution_size = float('inf')
 trace_data = []  # (elapsed_sec, cover_size)
 start_time = 0.0
 cutoff_time = 0.0
 
-
-# -----------------------------------------------------------------------------
 # Lower bound: LP-relaxation
-# -----------------------------------------------------------------------------
 def fractional_lower_bound(uncovered, subsets):
     """
     Solve the LP-relaxation of set-cover on the uncovered elements.
@@ -79,9 +74,7 @@ def fractional_lower_bound(uncovered, subsets):
     return math.ceil(len(uncovered) / max_cover)
 
 
-# -----------------------------------------------------------------------------
 # Recursive Branch & Bound
-# -----------------------------------------------------------------------------
 def branch_and_bound(universe, subsets, current_cover, current_solution):
     global best_solution, best_solution_size, trace_data, start_time, cutoff_time
 
@@ -127,9 +120,7 @@ def branch_and_bound(universe, subsets, current_cover, current_solution):
         current_solution.pop()
 
 
-# -----------------------------------------------------------------------------
-# Public API
-# -----------------------------------------------------------------------------
+# Minimum Set Cover for BnB
 def branch_and_bound_min_set_cover(universe, subsets, cutoff):
     """
     1) Run greedy_set_cover to get an initial upper bound.
