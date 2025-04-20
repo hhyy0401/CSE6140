@@ -1,9 +1,45 @@
+"""
+Approx.py - Minimum Set Cover Problem Solver
+
+This script implements a solver for the Minimum Set Cover Problem (MSCP).
+It reads problem instances from files, solves them using selected algorithms,
+and outputs solutions to files.
+
+-> Side Note: Other algorithm support is deprecated (another group mate made one at the same time)
+
+The Minimum Set Cover Problem is a classic NP-hard optimization problem where:
+- Given a universe U of elements and a collection S of subsets of U
+- Find the smallest sub-collection of S such that the union of the subsets covers all elements in U
+
+Usage:
+    python set_cover_solver.py -inst <instance_file> -alg <algorithm> -time <cutoff_time> -seed <random_seed>
+
+Arguments:
+    -inst: Path to the problem instance file
+    -alg: Algorithm to use (BnB, Approx, LS1, LS2)
+    -time: Cutoff time in seconds
+    -seed: Random seed for stochastic algorithms
+"""
 import sys
 import time
 import argparse
 
 def read_instance(filename):
-    """Read the instance from the given file."""
+    """
+    Read the Minimum Set Cover Problem instance from the given file.
+    
+    The file format is expected to be:
+    - First line: n m (n = number of elements in universe, m = number of subsets)
+    - Next m lines: size elem1 elem2 ... elemSize (each representing a subset)
+    
+    Args:
+        filename (str): Path to the instance file
+        
+    Returns:
+        tuple: (universe, subsets)
+            - universe: A set of all elements (integers from 1 to n)
+            - subsets: A list of sets, where each set is a subset of the universe
+    """
     with open(filename, 'r') as f:
         n, m = map(int, f.readline().strip().split())
         subsets = []
@@ -20,12 +56,24 @@ def greedy_set_cover(universe, subsets):
     """
     Implements a greedy approximation algorithm for the Minimum Set Cover problem.
     
+    The greedy algorithm works as follows:
+    1. Start with an empty solution and the complete set of uncovered elements
+    2. In each iteration, choose the subset that covers the most uncovered elements
+    3. Add this subset to the solution and remove the newly covered elements
+    4. Repeat until all elements are covered
+    
+    This is a polynomial-time algorithm that achieves an approximation ratio of H(d),
+    where H(d) is the d-th harmonic number and d is the size of the largest subset.
+    In the worst case, this gives an O(log n) approximation.
+    
     Args:
-        universe: A set of all elements (the universe U)
-        subsets: A list of sets, where each set is a subset of the universe
+        universe (set): A set of all elements (the universe U)
+        subsets (list): A list of sets, where each set is a subset of the universe
     
     Returns:
-        A list of indices of the chosen subsets (0-indexed)
+        tuple: (solution, time_spent)
+            - solution: A list of indices of the chosen subsets (0-indexed)
+            - time_spent: The time spent executing the algorithm, in seconds
     """
     start_time = time.time()
     # Elements that still need to be covered
@@ -46,6 +94,7 @@ def greedy_set_cover(universe, subsets):
                 continue
             
             # Calculate how many new elements this subset would cover
+            # by finding the intersection with remaining uncovered elements
             coverage = len(subset.intersection(elements_remaining))
             
             if coverage > best_subset_coverage:
@@ -56,7 +105,7 @@ def greedy_set_cover(universe, subsets):
         if best_subset_coverage > 0:
             # Add the best subset to our solution
             solution.append(best_subset_index)
-            # Remove the covered elements
+            # Remove the covered elements from our remaining set
             elements_remaining -= subsets[best_subset_index]
         else:
             # This should not happen if the problem instance is valid
@@ -68,7 +117,25 @@ def greedy_set_cover(universe, subsets):
     return solution, timeSpent
 
 def write_solution(filename, algorithm, cutoff_time, seed, solution_indices, subsets):
-    """Write the solution to the output file."""
+    """
+    Write the solution to the output file.
+    
+    The output file format is:
+    - First line: Number of sets used in the solution
+    - Second line: Space-separated list of indices of the selected subsets (1-indexed)
+    
+    The output filename is constructed based on the input parameters:
+    - For LS1 and LS2: <instance>_<algorithm>_<cutoff_time>_<seed>.sol
+    - For others: <instance>_<algorithm>_<cutoff_time>.sol
+    
+    Args:
+        filename (str): Base name of the instance file (without path and extension)
+        algorithm (str): Algorithm used (BnB, Approx, LS1, LS2)
+        cutoff_time (int): Cutoff time in seconds
+        seed (int): Random seed used
+        solution_indices (list): List of indices of the chosen subsets (0-indexed)
+        subsets (list): List of sets, where each set is a subset of the universe
+    """
     # Convert to 1-indexed for output
     one_indexed_solution = [i + 1 for i in solution_indices]
     
@@ -86,7 +153,10 @@ def write_solution(filename, algorithm, cutoff_time, seed, solution_indices, sub
         f.write(' '.join(map(str, one_indexed_solution)))
 
 def main():
-    
+    """
+    Main function that parses command-line arguments, reads the problem instance,
+    calls the appropriate algorithm, and writes the solution to a file.
+    """
     parser = argparse.ArgumentParser(description='Minimum Set Cover Solver')
     parser.add_argument('-inst', type=str, required=True, help='Instance file path')
     parser.add_argument('-alg', type=str, required=True, choices=['BnB', 'Approx', 'LS1', 'LS2'], 
