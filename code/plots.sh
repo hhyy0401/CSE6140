@@ -1,0 +1,1 @@
+python plots.py -inst small1 -time 5.0

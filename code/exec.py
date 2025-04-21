@@ -11,7 +11,7 @@ def load_dataset(filename):
     if '.' in filename:
         filename = filename.split('.')[0]
         
-    with open("data/"+filename+".in", 'r') as f:
+    with open("../data/"+filename+".in", 'r') as f:
         lines = f.readlines()
     n, _ = list(map(int, lines[0].strip().split(" ")))
     universe = set(range(1, n + 1))
@@ -21,11 +21,11 @@ def load_dataset(filename):
 
 def save_dataset(filename, result, intermediate_results):
 
-    with open("result/"+filename+".sol", 'w') as f:
+    with open("../output/"+filename+".sol", 'w') as f:
         f.write(f"{len(result)}\n")
         f.write(" ".join(str(s+1) for s in result))
     
-    with open("result/"+filename+".trace", 'w') as f:
+    with open("../output/"+filename+".trace", 'w') as f:
         for s in intermediate_results:
             f.write(f"{s[0]} {s[1]}\n")
     return

@@ -27,8 +27,10 @@ marker_styles = {
     'LS2': '^'
 }
 
-def find_matching_files(inst, alg, cutoff_time, folder='result'):
-    full_pattern = os.path.join(folder, f"{inst}_{alg}_{cutoff_time}*.trace")
+
+def find_matching_files(inst, alg, cutoff_time, folder='../output'):
+    output_dir = os.path.abspath(folder)
+    full_pattern = os.path.join(output_dir, f"{inst}_{alg}_{cutoff_time}*.trace")
     matched_files = glob.glob(full_pattern)
     return matched_files
 
@@ -37,8 +39,9 @@ def load_trace(filename):
         return [tuple(map(float, line.strip().split(' '))) for line in f if line.strip()]
 
 def load_opt(filename):
-    with open("data/"+filename+".out", 'r') as f:
+    with open("../data/"+filename+".out", 'r') as f:
         opt = int(f.readline().strip())  
+
     return opt
 
 def evaluate_solutions(solutions, opt):
@@ -95,7 +98,7 @@ def plot_qrtd_sqd_combined(solutions_dict, opt, inst, q_star=0.25, max_time=20):
     fig.subplots_adjust(bottom=0.2)  
     fig.legend(solutions_dict, loc='lower center', ncol=4, bbox_to_anchor=(0.5, -0.05))
 
-    plt.savefig(f"plot/qrtd_sqd_{inst}.pdf", dpi=300, bbox_inches='tight')
+    plt.savefig(f"../plot/qrtd_sqd_{inst}.pdf", dpi=300, bbox_inches='tight')
     plt.close()
 
 def plot_box_all(solutions_dict, inst):
@@ -111,7 +114,7 @@ def plot_box_all(solutions_dict, inst):
     plt.ylabel('Running Time (s)')
     plt.title(f'Box Plot of Running Times for {inst}')
     plt.tight_layout()
-    plt.savefig(f"plot/box_{inst}.pdf", dpi=300)
+    plt.savefig(f"../plot/box_{inst}.pdf", dpi=300)
     plt.close()
 
 def main():

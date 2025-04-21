@@ -1,1 +1,0 @@
-python plots.py -inst large1 -time 5.0
