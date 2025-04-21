@@ -1,1 +1,1 @@
-python plots.py -inst test4 -time 600
+python plots.py -inst large1 -time 5.0

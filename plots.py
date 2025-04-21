@@ -124,7 +124,7 @@ def main():
     opt = load_opt(args.inst)
     solutions_dict = {}
 
-    for alg in ['BnB', 'Approx', 'LS1', 'LS2']:
+    for alg in ['LS1', 'LS2']:
         solutions = []
         match_files = find_matching_files(args.inst, alg, args.time)
         for file in match_files:
